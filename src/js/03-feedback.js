@@ -5,14 +5,11 @@ initForm();
   
 form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const { 
-        elements: { email, message}} = event.currentTarget;
-        formData ={
-        Email:`${email.value}`,
-        Message:`${message.value}`
-    } 
-   console.log(formData)
-   event.currentTarget.reset();
+    const formData = new FormData(form);
+    formData.forEach((value, name) => console.log(value, name));
+      
+   
+    event.currentTarget.reset();
     localStorage.removeItem(LOCALSTORAGE_KEY);
     })
 
@@ -32,6 +29,7 @@ function initForm() {
         });
     }
 }
+
 
 
 
