@@ -38,5 +38,4 @@ let gallery = new SimpleLightbox(".gallery a", {
   scrollZoom: false,
  });
 gallery.on('show.simplelightbox', function () {
-	
-});
+	});

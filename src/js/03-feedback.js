@@ -1,33 +1,44 @@
 import throttle from 'lodash.throttle';
-const LOCALSTORAGE_KEY = "feedback-form-state";
-const form = document.querySelector(".feedback-form");
-initForm();
-  
-form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const formData = new FormData(form);
-    formData.forEach((value, name) => console.log(value, name));
-      
-   
-    event.currentTarget.reset();
-    localStorage.removeItem(LOCALSTORAGE_KEY);
-    })
 
-form.addEventListener('input', throttle(event => {
-   let inputForm = localStorage.getItem(LOCALSTORAGE_KEY);
-   inputForm = inputForm ? JSON.parse(inputForm) : {};
-   inputForm[event.target.name] = event.target.value;
-   localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(inputForm))
-}, 500));
+const formEL = document.querySelector('.feedback-form');
+const emailEl = document.querySelector('.feedback-form input');
+const textareaEl = document.querySelector('.feedback-form textarea');
 
-function initForm() {
-    let inputForm = localStorage.getItem(LOCALSTORAGE_KEY);
-    if (inputForm) {
-        inputForm = JSON.parse(inputForm);
-        Object.entries(inputForm).forEach(([name, value]) =>
-         {form.elements[name].value = value;
-        });
-    }
+const LOCAL_NAME = 'feedback-form-state';
+
+formEL.addEventListener('input', throttle(onFormInput, 500));
+formEL.addEventListener('submit', onFormSubmit);
+
+populateForm();
+
+function onFormInput() {
+  const formData = {
+    emailEl: emailEl.value,
+    textareaEl: textareaEl.value,
+  };
+  localStorage.setItem(LOCAL_NAME, JSON.stringify(formData));
+  // console.log(formData);
+}
+
+function onFormSubmit(e) {
+  e.preventDefault();
+ 
+
+  const saveLocalStorage = localStorage.getItem(LOCAL_NAME);
+  const objectFromLocalStorage = JSON.parse(saveLocalStorage);
+  console.log(objectFromLocalStorage);
+
+  localStorage.removeItem(LOCAL_NAME);
+  e.currentTarget.reset();
+}
+
+function populateForm() {
+  const saveLocalStorage = localStorage.getItem(LOCAL_NAME);
+  const objectFromLocalStorage = JSON.parse(saveLocalStorage);
+  if (objectFromLocalStorage) {
+    emailEl.value = objectFromLocalStorage.emailEl;
+    textareaEl.value = objectFromLocalStorage.textareaEl;
+  }
 }
 
 
